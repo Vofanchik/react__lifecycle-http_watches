@@ -8,8 +8,7 @@ function App() {
     date: new Date().toLocaleDateString(),
     traveled: 0,
   });
-  console.log(data);
-
+  
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -17,7 +16,7 @@ function App() {
     const formData = new FormData(target);
 
     const data2 = Object.fromEntries(formData);
-    if (dataList.find((dat) => dat.date == data2.date)) {
+    if (dataList.find((dat) => dat.date === data2.date)) {
       setList((dataList) =>
         dataList.filter((dat, i, arr) => {
           if (dat.date == data2.date) dat.traveled = Number(data2.traveled);
@@ -33,19 +32,23 @@ function App() {
           );
         })
       );
-    console.log(data2, dataList);
   };
   const onChange = (event) => {
     const { target } = event;
-    console.log(target);
     const { value } = target;
     setData(value);
-    console.log("value:", value);
+  };
+
+  const delWatch = (x) => {
+    setList((dataList) =>
+      [...dataList].filter((obj) => {
+        return obj.date !== x;
+      })
+    );
   };
 
 
   const clock = moment().format("LTS").toString(); 
-  console.log(clock);
   const [time, setTime] = useState(Date.now());
 
   useEffect(() => {
@@ -79,7 +82,9 @@ function App() {
           </div>
           <div className="column">
             <button type="submit">Добавить</button>
+            
           </div>
+
         </div>
       </form>
       <div className="row">
@@ -90,7 +95,9 @@ function App() {
                 <span>{record.date}</span>
                 <Clock clock={clock} hours={record.traveled} />{" "}
                 <span>{record.traveled} часа </span>{" "}
-
+                <button className="delete" onClick={() => delWatch(record.date)} >
+                удалить
+                </button>
               </li>
             ))}
           </ul>
